@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 440" width="760" height="440" role="img" aria-label="Convexity by Mortgage Rate: Effective vs Static">
+<rect width="760" height="440" fill="#ffffff"/>
+<text x="380.0" y="28" text-anchor="middle" font-size="16" font-weight="bold" fill="#334155" font-family="Helvetica, Arial, sans-serif">Convexity by Mortgage Rate: Effective vs Static</text>
+<line x1="80" x2="730" y1="342.2" y2="342.2" stroke="#cbd5e1"/>
+<text x="72.0" y="346.2" text-anchor="end" font-size="11" fill="#334155" font-family="Helvetica, Arial, sans-serif">-300</text>
+<line x1="80" x2="730" y1="275.3" y2="275.3" stroke="#cbd5e1"/>
+<text x="72.0" y="279.3" text-anchor="end" font-size="11" fill="#334155" font-family="Helvetica, Arial, sans-serif">-200</text>
+<line x1="80" x2="730" y1="208.4" y2="208.4" stroke="#cbd5e1"/>
+<text x="72.0" y="212.4" text-anchor="end" font-size="11" fill="#334155" font-family="Helvetica, Arial, sans-serif">-100</text>
+<line x1="80" x2="730" y1="141.5" y2="141.5" stroke="#cbd5e1"/>
+<text x="72.0" y="145.5" text-anchor="end" font-size="11" fill="#334155" font-family="Helvetica, Arial, sans-serif">0</text>
+<line x1="80" x2="730" y1="74.6" y2="74.6" stroke="#cbd5e1"/>
+<text x="72.0" y="78.6" text-anchor="end" font-size="11" fill="#334155" font-family="Helvetica, Arial, sans-serif">100</text>
+<line x1="126.4" x2="126.4" y1="375" y2="380" stroke="#334155"/>
+<text x="126.4" y="394.0" text-anchor="middle" font-size="11" fill="#334155" font-family="Helvetica, Arial, sans-serif">5.40</text>
+<line x1="219.3" x2="219.3" y1="375" y2="380" stroke="#334155"/>
+<text x="219.3" y="394.0" text-anchor="middle" font-size="11" fill="#334155" font-family="Helvetica, Arial, sans-serif">5.90</text>
+<line x1="312.1" x2="312.1" y1="375" y2="380" stroke="#334155"/>
+<text x="312.1" y="394.0" text-anchor="middle" font-size="11" fill="#334155" font-family="Helvetica, Arial, sans-serif">6.40</text>
+<line x1="405.0" x2="405.0" y1="375" y2="380" stroke="#334155"/>
+<text x="405.0" y="394.0" text-anchor="middle" font-size="11" fill="#334155" font-family="Helvetica, Arial, sans-serif">6.90</text>
+<line x1="497.9" x2="497.9" y1="375" y2="380" stroke="#334155"/>
+<text x="497.9" y="394.0" text-anchor="middle" font-size="11" fill="#334155" font-family="Helvetica, Arial, sans-serif">7.40</text>
+<line x1="590.7" x2="590.7" y1="375" y2="380" stroke="#334155"/>
+<text x="590.7" y="394.0" text-anchor="middle" font-size="11" fill="#334155" font-family="Helvetica, Arial, sans-serif">7.90</text>
+<line x1="683.6" x2="683.6" y1="375" y2="380" stroke="#334155"/>
+<text x="683.6" y="394.0" text-anchor="middle" font-size="11" fill="#334155" font-family="Helvetica, Arial, sans-serif">8.40</text>
+<line x1="80" x2="730" y1="141.5" y2="141.5" stroke="#334155" stroke-width="1"/>
+<line x1="80" x2="80" y1="55" y2="375" stroke="#334155"/>
+<line x1="80" x2="730" y1="375" y2="375" stroke="#334155"/>
+<text x="405.0" y="422.0" text-anchor="middle" font-size="12" fill="#334155" font-family="Helvetica, Arial, sans-serif">Current Mortgage Rate (%)</text>
+<text transform="translate(18 215.0) rotate(-90)" text-anchor="middle" font-size="12" fill="#334155" font-family="Helvetica, Arial, sans-serif">Convexity</text>
+<rect x="91.1" y="141.5" width="35.3" height="106.7" fill="#1f3a5f"/>
+<rect x="126.4" y="131.2" width="35.3" height="10.2" fill="#14b8a6"/>
+<text x="108.8" y="262.2" text-anchor="middle" font-size="10" fill="#334155" font-family="Helvetica, Arial, sans-serif">-159</text>
+<text x="144.1" y="126.2" text-anchor="middle" font-size="10" fill="#334155" font-family="Helvetica, Arial, sans-serif">15</text>
+<rect x="184.0" y="141.5" width="35.3" height="148.0" fill="#1f3a5f"/>
+<rect x="219.3" y="126.5" width="35.3" height="15.0" fill="#14b8a6"/>
+<text x="201.6" y="303.5" text-anchor="middle" font-size="10" fill="#334155" font-family="Helvetica, Arial, sans-serif">-221</text>
+<text x="236.9" y="121.5" text-anchor="middle" font-size="10" fill="#334155" font-family="Helvetica, Arial, sans-serif">22</text>
+<rect x="276.9" y="141.5" width="35.3" height="185.6" fill="#1f3a5f"/>
+<rect x="312.1" y="119.4" width="35.3" height="22.1" fill="#14b8a6"/>
+<text x="294.5" y="341.0" text-anchor="middle" font-size="10" fill="#334155" font-family="Helvetica, Arial, sans-serif">-277</text>
+<text x="329.8" y="114.4" text-anchor="middle" font-size="10" fill="#334155" font-family="Helvetica, Arial, sans-serif">33</text>
+<rect x="369.7" y="141.5" width="35.3" height="203.1" fill="#1f3a5f"/>
+<rect x="405.0" y="110.1" width="35.3" height="31.4" fill="#14b8a6"/>
+<text x="387.4" y="358.5" text-anchor="middle" font-size="10" fill="#334155" font-family="Helvetica, Arial, sans-serif">-303</text>
+<text x="422.6" y="105.1" text-anchor="middle" font-size="10" fill="#334155" font-family="Helvetica, Arial, sans-serif">47</text>
+<rect x="462.6" y="141.5" width="35.3" height="188.7" fill="#1f3a5f"/>
+<rect x="497.9" y="99.7" width="35.3" height="41.8" fill="#14b8a6"/>
+<text x="480.2" y="344.2" text-anchor="middle" font-size="10" fill="#334155" font-family="Helvetica, Arial, sans-serif">-282</text>
+<text x="515.5" y="94.7" text-anchor="middle" font-size="10" fill="#334155" font-family="Helvetica, Arial, sans-serif">62</text>
+<rect x="555.4" y="141.5" width="35.3" height="146.7" fill="#1f3a5f"/>
+<rect x="590.7" y="89.9" width="35.3" height="51.6" fill="#14b8a6"/>
+<text x="573.1" y="302.2" text-anchor="middle" font-size="10" fill="#334155" font-family="Helvetica, Arial, sans-serif">-219</text>
+<text x="608.4" y="84.9" text-anchor="middle" font-size="10" fill="#334155" font-family="Helvetica, Arial, sans-serif">77</text>
+<rect x="648.3" y="141.5" width="35.3" height="93.0" fill="#1f3a5f"/>
+<rect x="683.6" y="81.8" width="35.3" height="59.6" fill="#14b8a6"/>
+<text x="665.9" y="248.5" text-anchor="middle" font-size="10" fill="#334155" font-family="Helvetica, Arial, sans-serif">-139</text>
+<text x="701.2" y="76.8" text-anchor="middle" font-size="10" fill="#334155" font-family="Helvetica, Arial, sans-serif">89</text>
+<rect x="94" y="63" width="14" height="4" fill="#1f3a5f" transform="translate(0 4)"/>
+<text x="114.0" y="74.0" text-anchor="start" font-size="12" fill="#334155" font-family="Helvetica, Arial, sans-serif">Effective (Prepayments Re-Projected)</text>
+<rect x="94" y="81" width="14" height="4" fill="#14b8a6" transform="translate(0 4)"/>
+<text x="114.0" y="92.0" text-anchor="start" font-size="12" fill="#334155" font-family="Helvetica, Arial, sans-serif">Static (Prepayments Held Fixed)</text>
+</svg>

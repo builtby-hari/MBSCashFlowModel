@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 440" width="760" height="440" role="img" aria-label="Price per 100 by Discount Yield and PSA Speed">
+<text x="380.0" y="28" text-anchor="middle" font-size="16" font-weight="bold" fill="#e2e8f0" font-family="Helvetica, Arial, sans-serif">Price per 100 by Discount Yield and PSA Speed</text>
+<defs><linearGradient id="heatbar" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#60a5fa"/><stop offset="1" stop-color="#1e293b"/></linearGradient></defs>
+<text x="72" y="81.9" text-anchor="end" font-size="11" fill="#e2e8f0" font-family="Helvetica, Arial, sans-serif">7.5%</text>
+<rect x="90.0" y="55.0" width="95.0" height="45.7" fill="#1e293b" stroke="#0f172a" stroke-width="1"/>
+<text x="137.5" y="81.9" text-anchor="middle" font-size="12" fill="#ffffff" font-family="Helvetica, Arial, sans-serif">88.05</text>
+<rect x="185.0" y="55.0" width="95.0" height="45.7" fill="#223148" stroke="#0f172a" stroke-width="1"/>
+<text x="232.5" y="81.9" text-anchor="middle" font-size="12" fill="#ffffff" font-family="Helvetica, Arial, sans-serif">89.83</text>
+<rect x="280.0" y="55.0" width="95.0" height="45.7" fill="#263751" stroke="#0f172a" stroke-width="1"/>
+<text x="327.5" y="81.9" text-anchor="middle" font-size="12" fill="#ffffff" font-family="Helvetica, Arial, sans-serif">91.16</text>
+<rect x="375.0" y="55.0" width="95.0" height="45.7" fill="#283c58" stroke="#0f172a" stroke-width="1"/>
+<text x="422.5" y="81.9" text-anchor="middle" font-size="12" fill="#ffffff" font-family="Helvetica, Arial, sans-serif">92.18</text>
+<rect x="470.0" y="55.0" width="95.0" height="45.7" fill="#2c4363" stroke="#0f172a" stroke-width="1"/>
+<text x="517.5" y="81.9" text-anchor="middle" font-size="12" fill="#ffffff" font-family="Helvetica, Arial, sans-serif">93.62</text>
+<rect x="565.0" y="55.0" width="95.0" height="45.7" fill="#304a6e" stroke="#0f172a" stroke-width="1"/>
+<text x="612.5" y="81.9" text-anchor="middle" font-size="12" fill="#ffffff" font-family="Helvetica, Arial, sans-serif">95.25</text>
+<text x="72" y="127.6" text-anchor="end" font-size="11" fill="#e2e8f0" font-family="Helvetica, Arial, sans-serif">7.0%</text>
+<rect x="90.0" y="100.7" width="95.0" height="45.7" fill="#273a55" stroke="#0f172a" stroke-width="1"/>
+<text x="137.5" y="127.6" text-anchor="middle" font-size="12" fill="#ffffff" font-family="Helvetica, Arial, sans-serif">91.75</text>
+<rect x="185.0" y="100.7" width="95.0" height="45.7" fill="#2a405e" stroke="#0f172a" stroke-width="1"/>
+<text x="232.5" y="127.6" text-anchor="middle" font-size="12" fill="#ffffff" font-family="Helvetica, Arial, sans-serif">93.02</text>
+<rect x="280.0" y="100.7" width="95.0" height="45.7" fill="#2d4465" stroke="#0f172a" stroke-width="1"/>
+<text x="327.5" y="127.6" text-anchor="middle" font-size="12" fill="#ffffff" font-family="Helvetica, Arial, sans-serif">93.95</text>
+<rect x="375.0" y="100.7" width="95.0" height="45.7" fill="#2e486a" stroke="#0f172a" stroke-width="1"/>
+<text x="422.5" y="127.6" text-anchor="middle" font-size="12" fill="#ffffff" font-family="Helvetica, Arial, sans-serif">94.67</text>
+<rect x="470.0" y="100.7" width="95.0" height="45.7" fill="#314c71" stroke="#0f172a" stroke-width="1"/>
+<text x="517.5" y="127.6" text-anchor="middle" font-size="12" fill="#ffffff" font-family="Helvetica, Arial, sans-serif">95.67</text>
+<rect x="565.0" y="100.7" width="95.0" height="45.7" fill="#345179" stroke="#0f172a" stroke-width="1"/>
+<text x="612.5" y="127.6" text-anchor="middle" font-size="12" fill="#ffffff" font-family="Helvetica, Arial, sans-serif">96.79</text>
+<text x="72" y="173.3" text-anchor="end" font-size="11" fill="#e2e8f0" font-family="Helvetica, Arial, sans-serif">6.5%</text>
+<rect x="90.0" y="146.4" width="95.0" height="45.7" fill="#314d72" stroke="#0f172a" stroke-width="1"/>
+<text x="137.5" y="173.3" text-anchor="middle" font-size="12" fill="#ffffff" font-family="Helvetica, Arial, sans-serif">95.73</text>
+<rect x="185.0" y="146.4" width="95.0" height="45.7" fill="#335076" stroke="#0f172a" stroke-width="1"/>
+<text x="232.5" y="173.3" text-anchor="middle" font-size="12" fill="#ffffff" font-family="Helvetica, Arial, sans-serif">96.40</text>
+<rect x="280.0" y="146.4" width="95.0" height="45.7" fill="#34527a" stroke="#0f172a" stroke-width="1"/>
+<text x="327.5" y="173.3" text-anchor="middle" font-size="12" fill="#ffffff" font-family="Helvetica, Arial, sans-serif">96.90</text>
+<rect x="375.0" y="146.4" width="95.0" height="45.7" fill="#35547d" stroke="#0f172a" stroke-width="1"/>
+<text x="422.5" y="173.3" text-anchor="middle" font-size="12" fill="#ffffff" font-family="Helvetica, Arial, sans-serif">97.27</text>
+<rect x="470.0" y="146.4" width="95.0" height="45.7" fill="#365680" stroke="#0f172a" stroke-width="1"/>
+<text x="517.5" y="173.3" text-anchor="middle" font-size="12" fill="#ffffff" font-family="Helvetica, Arial, sans-serif">97.79</text>
+<rect x="565.0" y="146.4" width="95.0" height="45.7" fill="#375985" stroke="#0f172a" stroke-width="1"/>
+<text x="612.5" y="173.3" text-anchor="middle" font-size="12" fill="#ffffff" font-family="Helvetica, Arial, sans-serif">98.38</text>
+<text x="72" y="219.0" text-anchor="end" font-size="11" fill="#e2e8f0" font-family="Helvetica, Arial, sans-serif">6.0%</text>
+<rect x="90.0" y="192.1" width="95.0" height="45.7" fill="#3b6090" stroke="#0f172a" stroke-width="1"/>
+<text x="137.5" y="219.0" text-anchor="middle" font-size="12" fill="#ffffff" font-family="Helvetica, Arial, sans-serif">100.00</text>
+<rect x="185.0" y="192.1" width="95.0" height="45.7" fill="#3b6090" stroke="#0f172a" stroke-width="1"/>
+<text x="232.5" y="219.0" text-anchor="middle" font-size="12" fill="#ffffff" font-family="Helvetica, Arial, sans-serif">100.00</text>
+<rect x="280.0" y="192.1" width="95.0" height="45.7" fill="#3b6090" stroke="#0f172a" stroke-width="1"/>
+<text x="327.5" y="219.0" text-anchor="middle" font-size="12" fill="#ffffff" font-family="Helvetica, Arial, sans-serif">100.00</text>
+<rect x="375.0" y="192.1" width="95.0" height="45.7" fill="#3b6090" stroke="#0f172a" stroke-width="1"/>
+<text x="422.5" y="219.0" text-anchor="middle" font-size="12" fill="#ffffff" font-family="Helvetica, Arial, sans-serif">100.00</text>
+<rect x="470.0" y="192.1" width="95.0" height="45.7" fill="#3b6090" stroke="#0f172a" stroke-width="1"/>
+<text x="517.5" y="219.0" text-anchor="middle" font-size="12" fill="#ffffff" font-family="Helvetica, Arial, sans-serif">100.00</text>
+<rect x="565.0" y="192.1" width="95.0" height="45.7" fill="#3b6090" stroke="#0f172a" stroke-width="1"/>
+<text x="612.5" y="219.0" text-anchor="middle" font-size="12" fill="#ffffff" font-family="Helvetica, Arial, sans-serif">100.00</text>
+<text x="72" y="264.7" text-anchor="end" font-size="11" fill="#e2e8f0" font-family="Helvetica, Arial, sans-serif">5.5%</text>
+<rect x="90.0" y="237.9" width="95.0" height="45.7" fill="#4775b1" stroke="#0f172a" stroke-width="1"/>
+<text x="137.5" y="264.7" text-anchor="middle" font-size="12" fill="#ffffff" font-family="Helvetica, Arial, sans-serif">104.59</text>
+<rect x="185.0" y="237.9" width="95.0" height="45.7" fill="#4572ab" stroke="#0f172a" stroke-width="1"/>
+<text x="232.5" y="264.7" text-anchor="middle" font-size="12" fill="#ffffff" font-family="Helvetica, Arial, sans-serif">103.83</text>
+<rect x="280.0" y="237.9" width="95.0" height="45.7" fill="#436fa7" stroke="#0f172a" stroke-width="1"/>
+<text x="327.5" y="264.7" text-anchor="middle" font-size="12" fill="#ffffff" font-family="Helvetica, Arial, sans-serif">103.28</text>
+<rect x="375.0" y="237.9" width="95.0" height="45.7" fill="#426da5" stroke="#0f172a" stroke-width="1"/>
+<text x="422.5" y="264.7" text-anchor="middle" font-size="12" fill="#ffffff" font-family="Helvetica, Arial, sans-serif">102.86</text>
+<rect x="470.0" y="237.9" width="95.0" height="45.7" fill="#416ba0" stroke="#0f172a" stroke-width="1"/>
+<text x="517.5" y="264.7" text-anchor="middle" font-size="12" fill="#ffffff" font-family="Helvetica, Arial, sans-serif">102.29</text>
+<rect x="565.0" y="237.9" width="95.0" height="45.7" fill="#40689c" stroke="#0f172a" stroke-width="1"/>
+<text x="612.5" y="264.7" text-anchor="middle" font-size="12" fill="#ffffff" font-family="Helvetica, Arial, sans-serif">101.67</text>
+<text x="72" y="310.4" text-anchor="end" font-size="11" fill="#e2e8f0" font-family="Helvetica, Arial, sans-serif">5.0%</text>
+<rect x="90.0" y="283.6" width="95.0" height="45.7" fill="#538cd4" stroke="#0f172a" stroke-width="1"/>
+<text x="137.5" y="310.4" text-anchor="middle" font-size="12" fill="#ffffff" font-family="Helvetica, Arial, sans-serif">109.54</text>
+<rect x="185.0" y="283.6" width="95.0" height="45.7" fill="#4f85c9" stroke="#0f172a" stroke-width="1"/>
+<text x="232.5" y="310.4" text-anchor="middle" font-size="12" fill="#ffffff" font-family="Helvetica, Arial, sans-serif">107.92</text>
+<rect x="280.0" y="283.6" width="95.0" height="45.7" fill="#4c7fc0" stroke="#0f172a" stroke-width="1"/>
+<text x="327.5" y="310.4" text-anchor="middle" font-size="12" fill="#ffffff" font-family="Helvetica, Arial, sans-serif">106.74</text>
+<rect x="375.0" y="283.6" width="95.0" height="45.7" fill="#4a7bba" stroke="#0f172a" stroke-width="1"/>
+<text x="422.5" y="310.4" text-anchor="middle" font-size="12" fill="#ffffff" font-family="Helvetica, Arial, sans-serif">105.87</text>
+<rect x="470.0" y="283.6" width="95.0" height="45.7" fill="#4776b1" stroke="#0f172a" stroke-width="1"/>
+<text x="517.5" y="310.4" text-anchor="middle" font-size="12" fill="#ffffff" font-family="Helvetica, Arial, sans-serif">104.67</text>
+<rect x="565.0" y="283.6" width="95.0" height="45.7" fill="#4470a8" stroke="#0f172a" stroke-width="1"/>
+<text x="612.5" y="310.4" text-anchor="middle" font-size="12" fill="#ffffff" font-family="Helvetica, Arial, sans-serif">103.38</text>
+<text x="72" y="356.1" text-anchor="end" font-size="11" fill="#e2e8f0" font-family="Helvetica, Arial, sans-serif">4.5%</text>
+<rect x="90.0" y="329.3" width="95.0" height="45.7" fill="#60a5fa" stroke="#0f172a" stroke-width="1"/>
+<text x="137.5" y="356.1" text-anchor="middle" font-size="12" fill="#0f172a" font-family="Helvetica, Arial, sans-serif">114.87</text>
+<rect x="185.0" y="329.3" width="95.0" height="45.7" fill="#5a99e8" stroke="#0f172a" stroke-width="1"/>
+<text x="232.5" y="356.1" text-anchor="middle" font-size="12" fill="#ffffff" font-family="Helvetica, Arial, sans-serif">112.28</text>
+<rect x="280.0" y="329.3" width="95.0" height="45.7" fill="#5590da" stroke="#0f172a" stroke-width="1"/>
+<text x="327.5" y="356.1" text-anchor="middle" font-size="12" fill="#ffffff" font-family="Helvetica, Arial, sans-serif">110.41</text>
+<rect x="375.0" y="329.3" width="95.0" height="45.7" fill="#528ad0" stroke="#0f172a" stroke-width="1"/>
+<text x="422.5" y="356.1" text-anchor="middle" font-size="12" fill="#ffffff" font-family="Helvetica, Arial, sans-serif">109.02</text>
+<rect x="470.0" y="329.3" width="95.0" height="45.7" fill="#4d81c3" stroke="#0f172a" stroke-width="1"/>
+<text x="517.5" y="356.1" text-anchor="middle" font-size="12" fill="#ffffff" font-family="Helvetica, Arial, sans-serif">107.14</text>
+<rect x="565.0" y="329.3" width="95.0" height="45.7" fill="#4878b5" stroke="#0f172a" stroke-width="1"/>
+<text x="612.5" y="356.1" text-anchor="middle" font-size="12" fill="#ffffff" font-family="Helvetica, Arial, sans-serif">105.13</text>
+<text x="137.5" y="394" text-anchor="middle" font-size="11" fill="#e2e8f0" font-family="Helvetica, Arial, sans-serif">50</text>
+<text x="232.5" y="394" text-anchor="middle" font-size="11" fill="#e2e8f0" font-family="Helvetica, Arial, sans-serif">100</text>
+<text x="327.5" y="394" text-anchor="middle" font-size="11" fill="#e2e8f0" font-family="Helvetica, Arial, sans-serif">150</text>
+<text x="422.5" y="394" text-anchor="middle" font-size="11" fill="#e2e8f0" font-family="Helvetica, Arial, sans-serif">200</text>
+<text x="517.5" y="394" text-anchor="middle" font-size="11" fill="#e2e8f0" font-family="Helvetica, Arial, sans-serif">300</text>
+<text x="612.5" y="394" text-anchor="middle" font-size="11" fill="#e2e8f0" font-family="Helvetica, Arial, sans-serif">500</text>
+<text x="375.0" y="422" text-anchor="middle" font-size="12" fill="#e2e8f0" font-family="Helvetica, Arial, sans-serif">PSA Speed</text>
+<text transform="translate(18 215.0) rotate(-90)" text-anchor="middle" font-size="12" fill="#e2e8f0" font-family="Helvetica, Arial, sans-serif">Discount Yield</text>
+<rect x="686" y="55" width="14" height="320.0" fill="url(#heatbar)"/>
+<text x="706" y="65" font-size="11" fill="#e2e8f0" font-family="Helvetica, Arial, sans-serif">114.87</text>
+<text x="706" y="375" font-size="11" fill="#e2e8f0" font-family="Helvetica, Arial, sans-serif">88.05</text>
+</svg>

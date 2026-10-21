@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 240" width="1200" height="240" role="img" aria-label="MBS Cash Flow Model Banner">
+<rect width="1200" height="240" fill="#ffffff"/>
+<rect x="90" y="70" width="72" height="5" fill="#14b8a6"/>
+<text x="90" y="150" font-size="60" font-weight="bold" fill="#1f3a5f" font-family="Helvetica, Arial, sans-serif">MBS Cash Flow Model</text>
+<text x="90" y="192" font-size="24" fill="#334155" font-family="Helvetica, Arial, sans-serif">Agency MBS Cash Flows, Prepayment and Negative Convexity</text>
+<line x1="0" x2="1200" y1="222" y2="222" stroke="#14b8a6" stroke-width="1.5"/>
+</svg>
