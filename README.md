@@ -3,7 +3,7 @@
   <img alt="MBS Cash Flow Model: Agency MBS Cash Flows, Prepayment and Negative Convexity" src="docs/banner.svg" width="100%">
 </picture>
 
-![Python](https://img.shields.io/badge/python-3.9%2B-1f3a5f) ![Tests](https://img.shields.io/badge/tests-43%20passing-14b8a6) ![Dependencies](https://img.shields.io/badge/dependencies-none-1f3a5f) ![License](https://img.shields.io/badge/license-MIT-14b8a6)
+![Python](https://img.shields.io/badge/python-3.9%2B-1f3a5f) ![Dependencies](https://img.shields.io/badge/dependencies-none-1f3a5f) ![License](https://img.shields.io/badge/license-MIT-14b8a6)
 
 A small, dependency-free Python engine that projects monthly cash flows for an agency
 mortgage pass-through, prices it, solves for yield, and measures how sensitive its value and
@@ -11,9 +11,10 @@ life are to prepayment speed and to interest rates.
 
 Standard library only (Python 3.9+). No `pip install` needed.
 
-**Contents:** [Hero Chart](#effective-vs-static-convexity) · [Results](#results-at-a-glance) · [How It Works](#how-it-works) · [Quickstart](#quickstart) · [Charts](#charts) · [Sample Output](#sample-output) · [Methodology](#methodology) · [Optional Matplotlib Charts](#optional-matplotlib-charts) · [Skills](#skills-shown) · [Limitations](#limitations) · [Project Layout](#project-layout) · [Tests](#tests) · [Data Sources](#data-sources) · [License](#license) · [Glossary](#glossary)
+**Contents:** [Hero Chart](#effective-vs-static-convexity) · [Results](#results-at-a-glance) · [How It Works](#how-it-works) · [Quickstart](#quickstart) · [Charts](#charts) · [Sample Output](#sample-output) · [Methodology](#methodology) · [Tranche Waterfall](#tranche-waterfall) · [Optional Matplotlib Charts](#optional-matplotlib-charts) · [Skills](#skills-shown) · [Limitations](#limitations) · [Project Layout](#project-layout) · [Validation](#validation-against-sifma) · [Data Sources](#data-sources) · [License](#license) · [Glossary](#glossary)
 
 <a id="effective-vs-static-convexity"></a>
+
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/convexity_bars-dark.svg">
   <img alt="Bar Chart of Effective Convexity (Negative) and Static Convexity (Positive) at Mortgage Rates from 5.40% to 8.40%" src="docs/convexity_bars.svg" width="100%">
@@ -65,6 +66,8 @@ python3 cli.py --cpr 8 --price 102.5            # solve the yield from a price
 python3 cli.py --wam 300 --age 60 --wac 5 --coupon 4.5 --csv cashflows.csv
 python3 cli.py --market-rate 7.4 --yield 5.5    # rate-linked prepayments, effective duration/convexity
 python3 cli.py --cpr 20 --burnout 2             # burnout on a constant 20% CPR
+python3 cli.py --market-rate 7.4 --yield 5.5 --oas --paths 500 --vol 100 --seed 1   # OAS, Z-spread, option cost
+python3 cli.py --waterfall sample_deal.toml --grid   # tranche waterfall, stress grid, break-even CDR
 python3 -m unittest discover -v                 # run the tests
 python3 -m mbs.charts                           # regenerate every SVG in docs/ (light and dark)
 ```
@@ -87,7 +90,7 @@ Every chart is hand-written SVG from `mbs/charts.py`, with a light and a dark ve
   <img alt="Line Chart of Monthly Cash Flow to the Investor at 50, 100, 300 and 500 PSA" src="docs/cashflow_profile_by_psa.svg" width="100%">
 </picture>
 
-*Monthly cash flow to the investor at 50, 100, 300 and 500 PSA. Faster speeds start higher because they return principal early, then fall below the slower curves: 500 PSA drops under 300 PSA around month 51, 300 PSA under 100 PSA around month 75, and 100 PSA under 50 PSA around month 109.*
+*Monthly cash flow to the investor at 50, 100, 300 and 500 PSA. Faster speeds start higher because they return principal early, then fall below the slower curves: 500 PSA drops under 300 PSA around month 52, 300 PSA under 100 PSA around month 76, and 100 PSA under 50 PSA around month 110.*
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/cashflow_components_100psa-dark.svg">
@@ -215,6 +218,113 @@ Static convexity is positive because it holds prepayments fixed. Effective conve
 
 Burnout (`--burnout 2`) lowers prepayment speed as the pool pays down. At the same 7.40% market rate it stretches WAL from 8.15 to 11.32 years and moves effective convexity to -134.5. The size of that effect depends on the assumed burnout factor, so treat it as a demonstration of the mechanism.
 
+## OAS
+
+**Plain English.** Z-spread discounts one fixed cash flow stream. OAS discounts the cash flows from many simulated rate paths, and the borrower prepays differently on each path. The gap, Z-spread minus OAS, is the cost of the borrower's prepayment option, quoted in spread.
+
+```bash
+python3 cli.py --market-rate 7.40 --yield 5.5 --oas --paths 500 --vol 100 --seed 1
+```
+
+```
+OAS (500 antithetic paths, vol 100bp, seed 1, illustrative curve)
+OAS -3.8bp   Z-spread 71.9bp   Option cost 75.6bp
+OAS duration 4.41   OAS convexity -126.2  (+/-25bp curve shift, OAS held fixed)
+```
+
+The same pool at 50bp and 150bp of volatility gives option costs of 25.5bp and 131.2bp. More volatility makes the option worth more, so OAS falls.
+
+**Method** (code in `mbs/oas.py`).
+
+1. **Short rate.** Ho-Lee (Ho and Lee 1986; Hull, *Options, Futures and Other Derivatives*), $r(t) = f(0,t) + \sigma^2 t^2/2 + \sigma W(t)$, stepped monthly. $f(0,t)$ is the forward implied by the spot curve and $\sigma$ is a normal volatility in basis points per year (`--vol`, default 100). Ho-Lee can produce negative rates at high volatility.
+2. **Calibration.** Each month the simulated discount factors are scaled so their path average equals the curve discount factor. At zero spread the model then reprices any fixed cash flow to the curve exactly, for any path count.
+3. **Mortgage rate.** The simulated 10-year Ho-Lee zero yield plus a constant spread. The spread is set so the path starts at `--market-rate`, and it has no volatility of its own.
+4. **Prepayments.** Each month's CPR comes from the refinancing S-curve at that path's mortgage rate, then optional burnout (`--burnout`). Prepayments are path-dependent.
+5. **Paths.** Paths are antithetic (every draw is paired with its mirror) and seeded (`--seed`). `--paths` must be even.
+6. **Solve.** OAS is the constant spread $s$ that makes the average present value equal the price, with each cash flow discounted by the path factor times $\left[\frac{1+(\text{spot}_t+s)/12}{1+\text{spot}_t/12}\right]^{-t}$. At zero volatility this is the Z-spread.
+7. **OAS duration and convexity.** Shift the spot curve by $\pm$ `--shock` bp, re-simulate with the same seed and the same mortgage spread, reprice at the base OAS, and apply the usual finite-difference formulas.
+
+**Simplifications.**
+
+- The spot curve is an illustrative input (`default_spot`: 4.0% rising toward 5.0%), not market data, and the CLI has no flag to change it. Pass your own `spot` function to `oas_analysis()` in Python.
+- One factor: the mortgage rate moves with the short rate through Ho-Lee, so there is no curve twist and no mortgage spread volatility.
+- The Z-spread uses the static cash flows at `--market-rate`, while the OAS paths start from forward-implied mortgage rates. So at zero volatility with rate-sensitive prepayments the two differ slightly. With rate-insensitive prepayments they match.
+- Prepayment parameters are the same illustrative S-curve and burnout as above. Mean Monte Carlo error at a few hundred paths is several basis points of OAS, so raise `--paths` for stable numbers.
+- With the default 100bp volatility the sample premium pool has a slightly negative OAS. That reflects the illustrative inputs, not a view on any real security.
+
+## Tranche Waterfall
+
+**Plain English.** A securitization splits one pool into classes. The senior class (A) is paid first and loses last, the mezzanine (M) and subordinate (B) classes absorb losses first and earn more coupon for it, and the leftover cash goes to the residual holder. `mbs/waterfall.py` runs the default pool through that structure month by month and shows who gets paid, who takes a loss, and how bad the pool has to get before each class does.
+
+**Collateral.** Prepayments reuse the existing CPR and PSA code. Each month the constant default rate (CDR) converts to a monthly default rate the same way CPR converts to SMM, and that share of the performing balance defaults. A defaulted loan pays no interest and no principal, so defaults cut both the balance and the interest that month. After the recovery lag, the loan is liquidated: the recovery (1 minus severity) arrives as principal cash and the severity share is the realized loss. With CDR at zero the collateral is exactly `project_cashflows`.
+
+**Deal rules.**
+
+1. Interest: each class is due its balance times its coupon over 12, paid pro rata if collections fall short. Unpaid interest is not carried forward.
+2. Excess spread (interest collected minus interest paid) joins principal collections and is captured to pay notes down toward the overcollateralization (OC) target, where notes equal collateral (performing plus defaulted but unliquidated) minus the target. Cash above that is released to the residual.
+3. Principal is paid pro rata by balance, or strictly A then M then B if `principal = "sequential"` or if cumulative realized loss reaches the trigger. The trigger is the shifting-interest switch: once tripped, junior classes stop receiving principal and the senior class is protected.
+4. If notes still exceed collateral after payment, the gap is written down bottom up (B, then M, then A). Written-down principal is never reinstated.
+
+**Reading the output.** Each class shows WAL, principal window, loss as a percent of original balance, whether it takes a writedown, and yield at an input price (100 unless the class sets `price`). The break-even CDR is the lowest CDR, at the chosen severity, where the class loss first exceeds 0.01% of its balance, found by bisection. The grid shows class loss across CDR and severity.
+
+```bash
+python3 cli.py --waterfall sample_deal.toml --cdr 4 --severity 60 --grid   # add --psa or --cpr for prepayments, --lag for the recovery lag
+```
+
+`sample_deal.toml` is an illustrative structure for demonstration, not a real transaction. Every balance, coupon, trigger and stress level is an input. Reading TOML needs Python 3.11 or later; on older versions build a `Deal` in code.
+
+<details>
+<summary>Sample output</summary>
+
+```
+$ python3 cli.py --waterfall sample_deal.toml --cdr 4 --severity 60 --grid
+Deal: $100,000,000 pool  WAC 7.000%  net 6.500%  WAM 360  prepay 100 PSA
+Stress: CDR 4%  severity 60%  lag 6 months  OC target $2,000,000  trigger 3% cumulative loss
+Principal rule: pro rata, sequential from month 22
+
+Class        Balance    Cpn    WAL     Window  Loss %  Writedown   Price   Yield
+    A     80,000,000  5.25%   7.97      1-269    0.00         no  100.00  5.250%
+    M     12,000,000  6.00%  21.33      1-366   51.35        yes  100.00  3.273%
+    B      6,000,000  7.00%   1.12       1-21   91.38        yes  100.00 -39.498%
+Residual / OC cash: $540,080
+
+Break-even CDR at 60% severity (class loss first exceeds 0.01%):
+  A: 5.37%
+  M: 2.59%
+  B: 1.84%
+
+Class A loss % of original balance (rows CDR, columns severity):
+   CDR     20%     40%     60%     80%    100%
+    1%    0.00    0.00    0.00    0.00    0.00
+    2%    0.00    0.00    0.00    0.00    0.00
+    4%    0.00    0.00    0.00    0.96    8.85
+    6%    0.00    0.00    2.63   13.18   24.17
+    8%    0.00    0.00   10.06   23.04   36.31
+   10%    0.00    1.94   16.07   30.90   45.86
+
+Class M loss % of original balance (rows CDR, columns severity):
+   CDR     20%     40%     60%     80%    100%
+    1%    0.00    0.00    0.00    0.00    0.00
+    2%    0.00    0.00    0.00    2.67   30.30
+    4%    0.00    2.42   51.35   94.49   96.08
+    6%    0.00   44.92   93.76   96.22   97.64
+    8%    1.81   78.81   95.10   97.01   98.02
+   10%   17.34   92.64   96.01   97.37   98.36
+
+Class B loss % of original balance (rows CDR, columns severity):
+   CDR     20%     40%     60%     80%    100%
+    1%    0.00    0.00    0.00    0.00    0.00
+    2%    0.00    0.00   30.42   87.87   91.55
+    4%    0.00   84.60   91.38   94.49   96.08
+    6%   36.56   89.11   93.76   96.22   97.64
+    8%   77.27   91.06   95.10   97.01   98.02
+   10%   81.03   92.64   96.01   97.37   98.36
+```
+
+</details>
+
+**Simplifications.** The model uses fixed-rate classes with no fees or servicer advances, does not carry interest shortfalls forward, uses one cumulative loss trigger (no delinquency trigger), a dollar OC target with no step-down, and one CDR and severity for the whole life. Treat results as a teaching model, not a rating-agency run.
+
 ## Optional Matplotlib Charts
 
 The core package is standard-library only. `plots_mpl.py` is an optional extra that plots the same data with matplotlib and writes PNGs to `docs/mpl/`.
@@ -232,17 +342,19 @@ Python · Fixed income · Mortgage prepayment modeling · Data visualization · 
 
 ## Limitations
 
-- **Not OAS.** Effective duration and convexity re-project prepayments under parallel rate shocks, but there are no interest-rate paths, so no option cost and no OAS.
-- **Illustrative prepayment curve.** The S-curve parameters (floor 4%, cap 45%, midpoint 100bp, steepness 100) and the burnout factor are assumptions chosen for shape. They are not calibrated to agency prepayment data, so the effective measures show the mechanism, not a forecast.
-- **Burnout is simplified.** It scales the whole CPR, including baseline turnover. Real models apply burnout to the refinancing component only. The rate-linked CPR is constant in loan age (no seasoning in the rate response).
+- OAS is illustrative. OAS uses a one-factor Ho-Lee model on an illustrative curve with a constant mortgage spread (see the OAS section). It shows the method and the option-cost mechanism, not a desk-ready number.
+- Solver range. `yield_from_price()`, `z_spread()` and the OAS solver bisect over -50% to 100% (-0.5 to 1.0 decimal). A price outside that bracket raises `ValueError`; results are never clamped.
+- Illustrative prepayment curve. The S-curve parameters (floor 4%, cap 45%, midpoint 100bp, steepness 100) and the burnout factor are assumptions chosen for shape. They are not calibrated to agency prepayment data, so the effective measures show the mechanism, not a forecast.
+- Burnout is simplified. It scales the whole CPR, including baseline turnover. Real models apply burnout to the refinancing component only. The rate-linked CPR is constant in loan age (no seasoning in the rate response).
 - Prepayment speed does not depend on seasonality or loan characteristics.
 - No credit or default modeling (agency guarantee assumed; no delinquency or buyout behavior).
-- The pool uses a single WAC, with no payment delay or accrued interest.
+- The pool uses a single WAC, with no accrued interest. The default analytics assume no payment delay; `bey_price`, `bey_risk` and `wal(..., delay_days=)` accept one (SIFMA 30/360 bond-equivalent convention).
+- Yield and spread solvers search only -50% to 100%; a price needing a rate outside that range raises an error.
 - The cash flows and charts use one synthetic $100mm pool. No market data is loaded.
 
 **Next steps**
 
-1. Monte Carlo short-rate paths (for example Hull-White) with cash flows re-projected per path, then solve for OAS.
+1. Mean-reverting short rate (Hull-White) calibrated to a swaption or cap volatility surface, and a two-factor mortgage rate.
 2. Calibrate the S-curve and burnout to historical prepayment data, and add seasonality.
 3. Pull historical mortgage rates (FRED, e.g. `MORTGAGE30US`) to back-test projected speeds.
 
@@ -253,6 +365,9 @@ mbs/prepay.py                 CPR, SMM, PSA ramp
 mbs/cashflows.py              Pool, scheduled payment, monthly projection
 mbs/analytics.py              price, yield, WAL, duration, static convexity
 mbs/ratelinked.py             refinancing S-curve, rate-linked projection, effective duration/convexity
+mbs/oas.py                    Ho-Lee Monte Carlo paths, OAS, option cost, OAS duration/convexity
+mbs/waterfall.py              defaults and losses, tranche waterfall, OC and trigger, loss grid, break-even CDR
+sample_deal.toml              illustrative deal for the waterfall CLI
 mbs/charts.py                 hand-written SVG charts (light and dark), regenerated by python3 -m mbs.charts
 plots_mpl.py                  optional matplotlib versions of the main charts (PNG)
 requirements-extra.txt        optional extra: matplotlib
@@ -261,17 +376,9 @@ docs/                         SVG charts, banner and sample output; docs/mpl/ ho
 tests/                        unittest suite
 ```
 
-## Tests
+## Validation Against SIFMA
 
-`python3 -m unittest discover -v` runs 43 tests:
-
-- **Cash flow mechanics:** PSA ramp, SMM from CPR, balances amortize to zero, zero-prepayment cash flows match the level-payment formula, seasoned pools.
-- **Survivorship (validation):** With prepayments, scheduled principal must re-amortize the *current* balance over the *remaining* term. Two tests check this directly: scheduled principal matches a fresh amortization each month, and with a constant CPR the ending balance matches the closed form $B_0 \cdot \frac{(1+r)^n-(1+r)^t}{(1+r)^n-1}\,(1-\text{SMM})^t$. A model that fixes the payment at the original balance passes the zero-prepayment tests but fails these.
-- **Analytics:** price and yield round trip, par pricing at the coupon, WAL falls as PSA rises.
-- **Rate-linked layer:** the S-curve is monotone, bounded, and halfway at its midpoint; effective convexity is negative near the money, effective duration shortens as rates fall; burnout is off by default, conserves principal, lengthens WAL, and lowers the effective CPR over time.
-- **Charts:** every SVG is generated in light and dark and parses as valid XML; the sample panel carries the real CLI output; the price grid is par at the coupon.
-- **CLI:** the output labels and the new options.
-- **matplotlib (optional):** the PNG script writes valid PNGs. Skipped unless matplotlib is installed.
+The model reproduces the published numbers in the SIFMA (Bond Market Association, 1999) Uniform Practices chapter *Standard Formulas for the Analysis of Mortgage-Backed Securities*: the first-month cash flow split (amortization 0.00049188, prepayment 0.00025022, interest 0.00750000), the prepayment-speed example (SMM 0.435270%, CPR 5.1000%, 150% PSA, pool factor 0.85150625 -> 0.84732282), CF1-CF3 and CF360 of a 9.5%/9.0% 150 PSA pool, Average Life 9.77844, yield 9.10675% pricing at par, Duration 5.73147, Modified Duration 5.48186 and Cash-Flow Convexity 54.4326 (these use the bond-equivalent helpers `bey_price`/`bey_risk` with a 14-day payment delay). Source: https://www.sifma.org/wp-content/uploads/2017/08/chsf.pdf
 
 ## Data Sources
 
@@ -291,12 +398,13 @@ MIT. See `LICENSE`.
 | Convexity | How much a bond's price-versus-rate curve bends, which corrects a straight-line price estimate for big rate moves. |
 | Coupon | The fixed interest rate a bond pays each year, as a percent of its face value. |
 | CPR (Constant Prepayment Rate) | The share of a loan pool's remaining balance that borrowers pay off early in a year. |
-| Effective duration | A duration measure that re-runs the cash flows at each rate move, so early repayments adjust too; it estimates the percent price change for a one-point rate move. |
+| Effective Duration | A duration measure that re-runs the cash flows at each rate move, so early repayments adjust too; it estimates the percent price change for a one-point rate move. |
 | FRED | The Federal Reserve Bank of St. Louis's free database of economic data, including interest rate series. |
 | G-Fee (Guarantee Fee) | The fee taken out of each loan's interest to insure investors against default, so investors receive less than borrowers pay. |
 | Negative Convexity | A bend that works against the investor: when rates fall, the price gain is capped because borrowers refinance, like a bet with a capped upside. |
-| OAS (Option-Adjusted Spread) | The extra yield over Treasuries after pricing in the value of borrowers' right to repay early; this project does not compute it. |
+| OAS (Option-Adjusted Spread) | The extra yield over Treasuries after pricing in the value of borrowers' right to repay early; the `--oas` option estimates it by Monte Carlo. |
 | Par | Face value; a price of 100 means the bond costs exactly what it pays back, while above 100 is a premium and below 100 is a discount. |
+| Option Cost | Z-spread minus OAS: the spread given up because borrowers can repay early. |
 | Pass-Through | A security that collects monthly mortgage payments and passes them along to investors, like a relay where each runner hands the baton on. |
 | Prepayment | Paying off all or part of a loan before its scheduled due date, like paying a credit card bill early. |
 | PSA (Prepayment Speed) | A standard industry benchmark for how fast borrowers prepay, where 100 PSA is the usual baseline that ramps up over 30 months. |
@@ -309,7 +417,6 @@ MIT. See `LICENSE`.
 | WAL (Weighted Average Life) | The average number of years until each dollar of principal comes back, weighted by how much arrives when. |
 | WAM (Weighted Average Maturity) | The average number of months left until the pool's loans are fully repaid. |
 | Yield | The annual return an investor earns by buying at today's price and holding until the end. |
-
 
 ---
 

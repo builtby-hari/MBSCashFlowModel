@@ -7,7 +7,8 @@ import csv
 from mbs import (Pool, project_cashflows, price_from_yield, yield_from_price,
                  wal, macaulay_duration, modified_duration,
                  static_duration_convexity, mey_to_bey,
-                 refi_cpr, project_rate_linked, effective_risk)
+                 refi_cpr, project_rate_linked, effective_risk, oas_analysis)
+from mbs.waterfall import load_deal, run_waterfall, loss_grid, breakeven_cdr
 
 
 def build_parser():
@@ -28,16 +29,77 @@ def build_parser():
     h = p.add_mutually_exclusive_group()
     h.add_argument("--yield", dest="yld", type=float, help="discount yield, percent (default 5.5)")
     h.add_argument("--price", type=float, help="price per 100; solves for yield")
+    p.add_argument("--oas", action="store_true",
+                   help="also report OAS, Z-spread, option cost and OAS duration/convexity "
+                        "(needs --market-rate; Monte Carlo on an illustrative curve)")
+    p.add_argument("--paths", type=int, default=500, help="OAS Monte Carlo paths, even number (default 500)")
+    p.add_argument("--vol", type=float, default=100.0, help="OAS short-rate volatility, bp per year (default 100)")
+    p.add_argument("--seed", type=int, default=1, help="OAS random seed (default 1)")
     p.add_argument("--shock", type=float, default=25.0, help="bp shock for effective duration")
     p.add_argument("--scenarios", type=float, nargs="*", default=[50, 100, 150, 200, 300, 500],
                    help="PSA speeds for the scenario table")
     p.add_argument("--show", type=int, default=6, help="months of cash flow table to print")
+    p.add_argument("--waterfall", metavar="FILE",
+                   help="tranche waterfall: deal TOML file (see sample_deal.toml); uses --psa or --cpr "
+                        "for prepayments and ignores the pool flags")
+    p.add_argument("--cdr", type=float, default=2.0, help="waterfall constant default rate, percent (default 2)")
+    p.add_argument("--severity", type=float, default=40.0, help="waterfall loss severity, percent (default 40)")
+    p.add_argument("--lag", type=int, default=6, help="waterfall recovery lag, months (default 6)")
+    p.add_argument("--grid", action="store_true", help="also print the CDR x severity class loss grid")
     p.add_argument("--csv", help="write the full monthly cash flow table to this CSV path")
     return p
 
 
 def main(argv=None):
-    a = build_parser().parse_args(argv)
+    parser = build_parser()
+    a = parser.parse_args(argv)
+    if not a.shock > 0:
+        parser.error("--shock must be > 0")
+    try:
+        _waterfall(a) if a.waterfall else _run(a)
+    except ValueError as e:
+        parser.error(str(e))
+
+
+def _waterfall(a):
+    deal = load_deal(a.waterfall)
+    cpr = a.cpr / 100 if a.cpr is not None else None
+    psa = a.psa if a.psa is not None else (100.0 if cpr is None else None)
+    cdr, sev = a.cdr / 100, a.severity / 100
+    r = run_waterfall(deal, cdr, sev, a.lag, psa, cpr)
+    speed = f"{psa:g} PSA" if psa is not None else f"{a.cpr:g} CPR"
+    pool = deal.pool
+    print(f"Deal: ${pool.balance:,.0f} pool  WAC {pool.wac*100:.3f}%  net {pool.net_coupon*100:.3f}%  "
+          f"WAM {pool.wam}  prepay {speed}")
+    print(f"Stress: CDR {a.cdr:g}%  severity {a.severity:g}%  lag {a.lag} months  "
+          f"OC target ${deal.oc_target:,.0f}  trigger "
+          + (f"{deal.trigger_cum_loss*100:g}% cumulative loss" if deal.trigger_cum_loss is not None else "off"))
+    trip = next((p.month for p in r.periods if p.sequential and deal.principal == "pro_rata"), None)
+    print("Principal rule: " + (deal.principal if trip is None else f"pro rata, sequential from month {trip}"))
+    print(f"\n{'Class':>5} {'Balance':>14} {'Cpn':>6} {'WAL':>6} {'Window':>10} {'Loss %':>7} "
+          f"{'Writedown':>10} {'Price':>7} {'Yield':>7}")
+    for c, t in zip(r.classes, deal.tranches):
+        w = f"{c.first_month}-{c.last_month}" if c.first_month else "none"
+        y = f"{c.yield_*100:.3f}%" if c.yield_ is not None else "n/a"
+        print(f"{c.name:>5} {c.balance:>14,.0f} {t.coupon*100:>5.2f}% "
+              f"{(f'{c.wal:.2f}' if c.wal else 'n/a'):>6} {w:>10} {c.loss_pct:>7.2f} "
+              f"{'yes' if c.takes_writedown else 'no':>10} {c.price:>7.2f} {y:>7}")
+    print(f"Residual / OC cash: ${r.residual:,.0f}")
+    print(f"\nBreak-even CDR at {a.severity:g}% severity (class loss first exceeds 0.01%):")
+    for t in deal.tranches:
+        b = breakeven_cdr(deal, t.name, sev, a.lag, psa, cpr)
+        print(f"  {t.name}: " + (f"{b*100:.2f}%" if b is not None else "no loss at 99% CDR"))
+    if a.grid:
+        cdrs, sevs = [0.01, 0.02, 0.04, 0.06, 0.08, 0.10], [0.2, 0.4, 0.6, 0.8, 1.0]
+        g = loss_grid(deal, cdrs, sevs, a.lag, psa, cpr)
+        for t in deal.tranches:
+            print(f"\nClass {t.name} loss % of original balance (rows CDR, columns severity):")
+            print(f"{'CDR':>6} " + " ".join(f"{s*100:>6g}%" for s in sevs))
+            for c, row in zip(cdrs, g[t.name]):
+                print(f"{c*100:>5g}% " + " ".join(f"{v:>7.2f}" for v in row))
+
+
+def _run(a):
     pool = Pool(a.balance, a.wac / 100, a.coupon / 100, a.wam, a.age)
     psa, cpr = a.psa, (a.cpr / 100 if a.cpr is not None else None)
     mkt = a.market_rate / 100 if a.market_rate is not None else None
@@ -72,6 +134,17 @@ def main(argv=None):
         print(f"Effective duration {er.effective_duration:.2f}   Effective convexity "
               f"{er.effective_convexity:.1f}  (+/-{a.shock:g}bp, prepayments re-projected; "
               f"market rate and yield move together)")
+
+    if a.oas:
+        if mkt is None:
+            raise ValueError("--oas needs --market-rate")
+        o = oas_analysis(pool, px, mkt, vol=a.vol / 10_000.0, n_paths=a.paths, seed=a.seed,
+                         burnout=a.burnout, shock_bp=a.shock)
+        print(f"\nOAS ({a.paths} antithetic paths, vol {a.vol:g}bp, seed {a.seed}, illustrative curve)")
+        print(f"OAS {o.oas*1e4:.1f}bp   Z-spread {o.z_spread*1e4:.1f}bp   "
+              f"Option cost {o.option_cost*1e4:.1f}bp")
+        print(f"OAS duration {o.oas_duration:.2f}   OAS convexity {o.oas_convexity:.1f}  "
+              f"(+/-{a.shock:g}bp curve shift, OAS held fixed)")
 
     if a.show > 0:
         print(f"\nFirst {a.show} months of cash flow:")

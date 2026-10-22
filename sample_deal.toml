@@ -1,0 +1,26 @@
+# Illustrative deal for demonstration. Not a real transaction; all numbers are inputs.
+[collateral]
+balance = 100000000
+wac = 7.00          # percent
+coupon = 6.50       # net coupon, percent
+wam = 360
+
+[deal]
+oc_target_pct = 2.0             # percent of the original pool
+trigger_cum_loss_pct = 3.0      # cumulative realized loss that switches to sequential pay
+principal = "pro_rata"          # before the trigger
+
+[[class]]
+name = "A"
+balance_pct = 80.0
+coupon = 5.25
+
+[[class]]
+name = "M"
+balance_pct = 12.0
+coupon = 6.00
+
+[[class]]
+name = "B"
+balance_pct = 6.0
+coupon = 7.00

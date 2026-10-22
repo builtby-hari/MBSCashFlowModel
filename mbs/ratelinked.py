@@ -56,6 +56,8 @@ def effective_risk(pool: Pool, market_rate: float, y: float, shock_bp: float = 2
     market_rate and y are decimals. Each shock moves both by +/- shock_bp. Static measures are
     computed on the base-rate cash flows for comparison.
     """
+    if not shock_bp > 0:
+        raise ValueError("shock_bp must be > 0")
     dy = shock_bp / 10_000.0
 
     def value(shift):

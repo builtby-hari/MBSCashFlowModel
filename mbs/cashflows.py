@@ -16,16 +16,29 @@ class Pool:
     net_coupon:  pass-through rate paid to investors = WAC - servicing - g-fee
     wam:         weighted-average remaining maturity at settlement, in months
     age:         weighted-average loan age (WALA) in months; drives the PSA ramp
+    original_term: original loan term in months (default 360); age + wam may not exceed it
     """
     balance: float
     wac: float
     net_coupon: float
     wam: int
     age: int = 0
+    original_term: int = 360
 
     def __post_init__(self):
+        for name in ("balance", "wac", "net_coupon"):
+            if not math.isfinite(getattr(self, name)):
+                raise ValueError(f"{name} must be a finite number")
+        if not (isinstance(self.wam, int) and isinstance(self.age, int)):
+            raise ValueError("wam and age must be whole numbers of months")
         if self.balance <= 0 or self.wam < 1 or self.age < 0:
             raise ValueError("balance must be > 0, wam >= 1, age >= 0")
+        if not isinstance(self.original_term, int) or self.original_term < 1:
+            raise ValueError("original_term must be a whole number of months >= 1")
+        if self.age + self.wam > self.original_term:
+            raise ValueError("age + wam cannot exceed original_term")
+        if self.wac < 0 or self.net_coupon < 0:
+            raise ValueError("wac and net coupon must be >= 0")
         if self.net_coupon > self.wac:
             raise ValueError("net coupon cannot exceed gross WAC")
 
