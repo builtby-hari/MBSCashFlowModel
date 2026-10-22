@@ -3,6 +3,7 @@
 import os
 import subprocess
 import sys
+import tempfile
 import unittest
 
 from mbs import Pool, cpr_vector, effective_risk, mey_to_bey, project_cashflows, psa_cpr
@@ -88,6 +89,20 @@ class TestCliFailures(unittest.TestCase):
 
     def test_zero_shock(self):
         self.assertCleanFailure("--shock", "0")
+
+    def test_missing_deal_file(self):
+        self.assertCleanFailure("--waterfall", "no_such_deal.toml")
+
+    def test_deal_file_without_collateral(self):
+        with tempfile.NamedTemporaryFile("w", suffix=".toml", delete=False) as f:
+            f.write("[deal]\n")
+        try:
+            self.assertCleanFailure("--waterfall", f.name)
+        finally:
+            os.remove(f.name)
+
+    def test_unwritable_csv_path(self):
+        self.assertCleanFailure("--csv", os.path.join(REPO, "no_such_dir", "out.csv"))
 
 
 if __name__ == "__main__":

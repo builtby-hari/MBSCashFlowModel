@@ -24,16 +24,18 @@ Standard library only (Python 3.9+). No `pip install` needed.
 
 ## Results at a Glance
 
-All figures come from running the CLI on the default $100mm pool (6.50% WAC, 6.00% coupon, 360 months, 5.50% discount yield).
+Every number below comes from running the CLI on the default $100mm pool (6.50% WAC, 6.00% coupon, 360 months, 5.50% discount yield) and the illustrative `sample_deal.toml`.
 
 | Measure | Value | Command |
 |---|---|---|
-| WAL at 100 PSA | 11.49 years | `python3 cli.py` |
-| Price at 100 PSA | 103.832 per 100 | `python3 cli.py` |
-| Effective vs Static Convexity at a 7.40% Market Rate | -282.1 vs +62.4 | `python3 cli.py --market-rate 7.40 --yield 5.5` |
-| Effective vs Static Duration at a 7.40% Market Rate | 5.01 vs 5.80 years | same |
-| WAL Across Mortgage Rates 5.40% to 8.40% | 3.28 to 10.59 years | same (rate sensitivity table) |
-| WAL at 7.40% with Burnout 2 | 8.15 to 11.32 years | `python3 cli.py --market-rate 7.40 --yield 5.5 --burnout 2` |
+| Price and WAL at 100 PSA | 103.832 per 100, 11.49 years | `python3 cli.py` |
+| Price and WAL, rate-linked at a 7.40% market rate | 102.905 per 100, 8.15 years | `python3 cli.py --market-rate 7.40 --yield 5.5` |
+| Effective vs static duration at 7.40% | 5.01 vs 5.80 years | same |
+| Effective vs static convexity at 7.40% | -282.1 vs +62.4 | same |
+| Z-spread vs OAS at 100bp vol | 71.9bp vs -3.8bp, option cost 75.6bp | `python3 cli.py --market-rate 7.40 --yield 5.5 --oas` |
+| Waterfall break-even CDR at 40% severity | A 8.91%, M 3.89%, B 2.70% | `python3 cli.py --waterfall sample_deal.toml` |
+
+**Plain-English read.** Effective convexity is negative because the investor is short the borrower's prepayment option: when rates fall, borrowers refinance at par and cap the price gain. That option costs 75.6bp of spread at 100bp of volatility. In the waterfall, the senior class survives more than three times the default rate that first hits the subordinate class.
 
 ## How It Works
 
@@ -241,7 +243,7 @@ The same pool at 50bp and 150bp of volatility gives option costs of 25.5bp and 1
 3. **Mortgage rate.** The simulated 10-year Ho-Lee zero yield plus a constant spread. The spread is set so the path starts at `--market-rate`, and it has no volatility of its own.
 4. **Prepayments.** Each month's CPR comes from the refinancing S-curve at that path's mortgage rate, then optional burnout (`--burnout`). Prepayments are path-dependent.
 5. **Paths.** Paths are antithetic (every draw is paired with its mirror) and seeded (`--seed`). `--paths` must be even.
-6. **Solve.** OAS is the constant spread $s$ that makes the average present value equal the price, with each cash flow discounted by the path factor times $\left[\frac{1+(\text{spot}_t+s)/12}{1+\text{spot}_t/12}\right]^{-t}$. At zero volatility this is the Z-spread.
+6. **Solve.** OAS is the constant spread $s$ that makes the average present value equal the price, with each cash flow discounted by the path factor times $\left[\frac{1+(\text{spot}_t+s)/12}{1+\text{spot}_t/12}\right]^{-t}$. At zero volatility, with rate-insensitive prepayments, this is the Z-spread.
 7. **OAS duration and convexity.** Shift the spot curve by $\pm$ `--shock` bp, re-simulate with the same seed and the same mortgage spread, reprice at the base OAS, and apply the usual finite-difference formulas.
 
 **Simplifications.**
@@ -347,9 +349,8 @@ Python · Fixed income · Mortgage prepayment modeling · Data visualization · 
 - Illustrative prepayment curve. The S-curve parameters (floor 4%, cap 45%, midpoint 100bp, steepness 100) and the burnout factor are assumptions chosen for shape. They are not calibrated to agency prepayment data, so the effective measures show the mechanism, not a forecast.
 - Burnout is simplified. It scales the whole CPR, including baseline turnover. Real models apply burnout to the refinancing component only. The rate-linked CPR is constant in loan age (no seasoning in the rate response).
 - Prepayment speed does not depend on seasonality or loan characteristics.
-- No credit or default modeling (agency guarantee assumed; no delinquency or buyout behavior).
+- The pass-through analytics assume the agency guarantee, so they model no credit loss. Defaults and losses exist only in the tranche waterfall, with no delinquency or buyout behavior.
 - The pool uses a single WAC, with no accrued interest. The default analytics assume no payment delay; `bey_price`, `bey_risk` and `wal(..., delay_days=)` accept one (SIFMA 30/360 bond-equivalent convention).
-- Yield and spread solvers search only -50% to 100%; a price needing a rate outside that range raises an error.
 - The cash flows and charts use one synthetic $100mm pool. No market data is loaded.
 
 **Next steps**

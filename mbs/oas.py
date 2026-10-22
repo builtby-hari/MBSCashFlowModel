@@ -15,8 +15,8 @@ Method, in order:
 4. Prepayments. Each month's CPR comes from the refi S-curve at that path's mortgage rate,
    then optional burnout, through the same projection code as the rest of the package.
 5. OAS. The constant spread s, applied as discount factor x [(1+(spot+s)/12)/(1+spot/12)]^-t,
-   that makes the average present value equal the price. At zero volatility this is the
-   Z-spread. Option cost = Z-spread minus OAS.
+   that makes the average present value equal the price. At zero volatility, with prepayments
+   that do not depend on rates, this is the Z-spread. Option cost = Z-spread minus OAS.
 
 The curve, vol, spread tenor and S-curve defaults are illustrative, not market data.
 """

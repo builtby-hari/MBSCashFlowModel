@@ -4,11 +4,25 @@
 import argparse
 import csv
 
-from mbs import (Pool, project_cashflows, price_from_yield, yield_from_price,
-                 wal, macaulay_duration, modified_duration,
-                 static_duration_convexity, mey_to_bey,
-                 refi_cpr, project_rate_linked, effective_risk, oas_analysis)
-from mbs.waterfall import load_deal, run_waterfall, loss_grid, breakeven_cdr
+from mbs import (
+    Pool,
+    breakeven_cdr,
+    effective_risk,
+    load_deal,
+    loss_grid,
+    macaulay_duration,
+    mey_to_bey,
+    modified_duration,
+    oas_analysis,
+    price_from_yield,
+    project_cashflows,
+    project_rate_linked,
+    refi_cpr,
+    run_waterfall,
+    static_duration_convexity,
+    wal,
+    yield_from_price,
+)
 
 
 def build_parser():
@@ -57,8 +71,10 @@ def main(argv=None):
         parser.error("--shock must be > 0")
     try:
         _waterfall(a) if a.waterfall else _run(a)
-    except ValueError as e:
+    except (ValueError, OSError) as e:
         parser.error(str(e))
+    except KeyError as e:
+        parser.error(f"deal file is missing required key {e}")
 
 
 def _waterfall(a):

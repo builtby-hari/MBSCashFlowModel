@@ -9,6 +9,10 @@ from .analytics import (
 )
 from .ratelinked import refi_cpr, project_rate_linked, effective_risk, EffectiveRisk
 from .oas import oas_analysis, OASResult, simulate_paths, default_spot
+from .waterfall import (
+    Tranche, Deal, CollateralRow, Period, ClassResult, DealResult, project_collateral,
+    run_waterfall, class_losses, loss_grid, breakeven_cdr, load_deal,
+)
 
 __all__ = [
     "smm_from_cpr", "cpr_from_smm", "psa_cpr", "cpr_vector", "Pool", "CashFlow",
@@ -17,4 +21,7 @@ __all__ = [
     "static_duration_convexity", "mey_to_bey", "z_spread", "bey_price", "bey_risk",
     "refi_cpr", "project_rate_linked", "effective_risk", "EffectiveRisk",
     "oas_analysis", "OASResult", "simulate_paths", "default_spot",
+    "Tranche", "Deal", "CollateralRow", "Period", "ClassResult", "DealResult",
+    "project_collateral", "run_waterfall", "class_losses", "loss_grid", "breakeven_cdr",
+    "load_deal",
 ]
